@@ -14,7 +14,7 @@
       "backgroundColor": "#0a0a16"
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.kismetai.app",
       "buildNumber": "1",
       "infoPlist": {

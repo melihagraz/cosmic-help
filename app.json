@@ -19,7 +19,8 @@
       "buildNumber": "1",
       "infoPlist": {
         "NSCameraUsageDescription": "Kismet uses the camera for coffee cup, palm, and face readings.",
-        "NSPhotoLibraryUsageDescription": "Kismet needs access to your photos to read coffee cup images."
+        "NSPhotoLibraryUsageDescription": "Kismet needs access to your photos to read coffee cup images.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -27,7 +28,11 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#0a0a16"
       },
-      "package": "com.kismetai.app"
+      "package": "com.kismetai.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -37,6 +42,13 @@
           "cameraPermission": "Allow Kismet to access your camera for fortune readings."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ff2e33a9-8499-4216-a2f0-4dd1185241b1"
+      }
+    },
+    "owner": "melihagraz"
   }
 }

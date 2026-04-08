@@ -5,6 +5,7 @@ import { View, ActivityIndicator } from 'react-native';
 import { useFonts, PlayfairDisplay_400Regular, PlayfairDisplay_600SemiBold, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import * as SplashScreen from 'expo-splash-screen';
 import { Colors } from '../constants/colors';
+import { AuthProvider } from '../contexts/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,7 +31,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <AuthProvider>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -39,6 +40,6 @@ export default function RootLayout() {
           animation: 'slide_from_right',
         }}
       />
-    </>
+    </AuthProvider>
   );
 }

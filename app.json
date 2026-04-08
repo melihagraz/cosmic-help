@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Kismet",
-    "slug": "kismet",
+    "name": "Cosmic Help",
+    "slug": "cosmic-help",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "kismet",
+    "scheme": "cosmichelp",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
@@ -15,11 +15,12 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.kismetai.app",
-      "buildNumber": "1",
+      "bundleIdentifier": "com.cosmichelp.app",
+      "buildNumber": "5",
+      "usesAppleSignIn": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "Kismet uses the camera for coffee cup, palm, and face readings.",
-        "NSPhotoLibraryUsageDescription": "Kismet needs access to your photos to read coffee cup images.",
+        "NSCameraUsageDescription": "Cosmic Help uses the camera for AI vision analysis.",
+        "NSPhotoLibraryUsageDescription": "Cosmic Help needs access to your photos for AI analysis.",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
@@ -28,7 +29,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#0a0a16"
       },
-      "package": "com.kismetai.app",
+      "package": "com.cosmichelp.app",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
@@ -39,14 +40,15 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow Kismet to access your camera for fortune readings."
+          "cameraPermission": "Allow Cosmic Help to access your camera for AI analysis."
         }
-      ]
+      ],
+      "expo-apple-authentication"
     ],
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "ff2e33a9-8499-4216-a2f0-4dd1185241b1"
+        "projectId": "01bded58-ceef-47b9-8d47-d92b956f1a71"
       }
     },
     "owner": "melihagraz"

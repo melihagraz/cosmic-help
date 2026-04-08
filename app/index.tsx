@@ -2,19 +2,30 @@ import { useEffect, useState } from 'react';
 import { Redirect } from 'expo-router';
 import { View, ActivityIndicator } from 'react-native';
 import { storage } from '../services/storage';
+import { supabase } from '../services/supabase';
 import { Colors } from '../constants/colors';
 
 export default function Index() {
   const [loading, setLoading] = useState(true);
-  const [onboardingDone, setOnboardingDone] = useState(false);
+  const [route, setRoute] = useState<string>('');
 
   useEffect(() => {
-    checkOnboarding();
+    checkState();
   }, []);
 
-  const checkOnboarding = async () => {
-    const done = await storage.isOnboardingDone();
-    setOnboardingDone(done);
+  const checkState = async () => {
+    const onboardingDone = await storage.isOnboardingDone();
+
+    if (!onboardingDone) {
+      // Fresh user — start onboarding
+      setRoute('/onboarding/welcome');
+      setLoading(false);
+      return;
+    }
+
+    // Onboarding done — go to home
+    // Auth sync happens in background if user is signed in
+    setRoute('/(tabs)/home');
     setLoading(false);
   };
 
@@ -26,9 +37,5 @@ export default function Index() {
     );
   }
 
-  if (onboardingDone) {
-    return <Redirect href="/(tabs)/home" />;
-  }
-
-  return <Redirect href="/onboarding/welcome" />;
+  return <Redirect href={route as any} />;
 }

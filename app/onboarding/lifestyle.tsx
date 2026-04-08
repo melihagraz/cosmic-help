@@ -63,7 +63,7 @@ export default function LifestyleScreen() {
 
         <KismetButton
           title={i18n.t('onboarding.next')}
-          onPress={() => router.push({ pathname: '/onboarding/interests', params: { ...params, relation, focus: focus.join(',') } })}
+          onPress={() => router.push({ pathname: '/onboarding/promise', params: { ...params, relation, focus: focus.join(',') } })}
           disabled={!relation || focus.length === 0}
         />
       </ScrollView>

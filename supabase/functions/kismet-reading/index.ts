@@ -9,7 +9,7 @@ const corsHeaders = {
 };
 
 interface ReadingRequest {
-  type: "coffee" | "tarot" | "dream" | "palm" | "face";
+  type: "coffee" | "tarot" | "dream" | "palm" | "face" | "birthchart";
   lang: "tr" | "en";
   userProfile?: {
     name?: string;
@@ -23,6 +23,7 @@ interface ReadingRequest {
   dreamText?: string;      // dream
   tarotCards?: string[];    // tarot (seçilen kart isimleri)
   tarotPositions?: string[]; // tarot (past, present, future)
+  birthChartData?: string; // birthchart (hesaplanmış gezegen pozisyonları)
 }
 
 function buildSystemPrompt(type: string, lang: string): string {
@@ -31,7 +32,7 @@ function buildSystemPrompt(type: string, lang: string): string {
     : "Respond in English. Use a warm, mystical but sincere tone. Address the user as 'you'.";
 
   const prompts: Record<string, string> = {
-    coffee: `Sen Kismet, deneyimli bir Türk kahve falcısısın. Fincan fotoğraflarından şekilleri yorumluyorsun.
+    coffee: `Sen Cosmic Help, deneyimli bir Türk kahve fincanı analiz uzmanısın. Fincan fotoğraflarından şekilleri yorumluyorsun.
 ${langInstruction}
 
 Kurallar:
@@ -42,7 +43,7 @@ Kurallar:
 - 3-4 paragraf yaz
 - Kullanıcının profil bilgilerini yorumuna entegre et`,
 
-    tarot: `Sen Kismet, bilge bir tarot okuyucususun. Seçilen kartları yorumluyorsun.
+    tarot: `Sen Cosmic Help, bilge bir tarot okuyucususun. Seçilen kartları yorumluyorsun.
 ${langInstruction}
 
 Kurallar:
@@ -52,7 +53,7 @@ Kurallar:
 - Pozitif ve yapıcı ol
 - Kullanıcının hayat odağına göre yorumla`,
 
-    dream: `Sen Kismet, rüya yorumcususun. Rüyalardaki sembolleri ve anlamları çözümlüyorsun.
+    dream: `Sen Cosmic Help, rüya yorumcususun. Rüyalardaki sembolleri ve anlamları çözümlüyorsun.
 ${langInstruction}
 
 Kurallar:
@@ -63,7 +64,7 @@ Kurallar:
 - Pratik öneriler sun
 - 3-4 paragraf yaz`,
 
-    palm: `Sen Kismet, el falı uzmanısın. Avuç içi fotoğraflarından çizgileri okuyorsun.
+    palm: `Sen Cosmic Help, el analizi uzmanısın. Avuç içi fotoğraflarından çizgileri okuyorsun.
 ${langInstruction}
 
 Kurallar:
@@ -73,7 +74,7 @@ Kurallar:
 - Gelecek hakkında ipuçları ver
 - 3-4 paragraf yaz`,
 
-    face: `Sen Kismet, yüz okuma (fizyognomi) uzmanısın. Yüz hatlarından karakter analizi yapıyorsun.
+    face: `Sen Cosmic Help, yüz okuma (fizyognomi) uzmanısın. Yüz hatlarından karakter analizi yapıyorsun.
 ${langInstruction}
 
 Kurallar:
@@ -82,6 +83,21 @@ Kurallar:
 - Enerji ve aura analizi yap
 - Güçlü yönleri ve potansiyeli vurgula
 - 3-4 paragraf yaz`,
+
+    birthchart: `Sen Cosmic Help, profesyonel bir astrolog ve doğum haritası yorumcususun. Hesaplanmış gezegen pozisyonlarını, ev yerleşimlerini ve açıları derinlemesine yorumluyorsun.
+${langInstruction}
+
+Kurallar:
+- Güneş burcunu ve evini yorumla (temel kimlik ve yaşam amacı)
+- Ay burcunu ve evini yorumla (duygusal doğa ve iç dünya)
+- Yükselen burcu yorumla (dış dünyaya yansıyan kişilik)
+- Önemli gezegen açılarını yorumla (güçlü yönler ve zorluklar)
+- Kullanıcının hayat odağına göre (kariyer, aşk, sağlık vb.) özel yorumlar yap
+- Her gezegen-ev kombinasyonunun pratik hayatta ne anlama geldiğini açıkla
+- Pozitif ve yapıcı ol, zorlukları büyüme fırsatı olarak sun
+- 5-6 paragraf detaylı yorum yaz
+- Haritadaki en güçlü konfigürasyonları (stellium, grand trine, T-square vb.) tespit et
+- Kişinin benzersiz potansiyelini vurgula`,
   };
 
   return prompts[type] || prompts.coffee;
@@ -141,7 +157,7 @@ function buildUserMessage(req: ReadingRequest): any[] {
       }
       content.push({
         type: "text",
-        text: `Bu avuç içi fotoğrafını analiz et ve el falı oku.${profileContext}`,
+        text: `Bu avuç içi fotoğrafını analiz et ve el analizi yap.${profileContext}`,
       });
       break;
 
@@ -155,6 +171,13 @@ function buildUserMessage(req: ReadingRequest): any[] {
       content.push({
         type: "text",
         text: `Bu yüz fotoğrafını analiz et ve karakter/enerji analizi yap.${profileContext}`,
+      });
+      break;
+
+    case "birthchart":
+      content.push({
+        type: "text",
+        text: `Aşağıdaki doğum haritası verilerini detaylı yorumla:\n\n${req.birthChartData || "Veri bulunamadı"}${profileContext}`,
       });
       break;
   }
@@ -186,6 +209,9 @@ Deno.serve(async (req: Request) => {
     const needsVision = body.imageBase64 && ["coffee", "palm", "face"].includes(body.type);
     const model = needsVision ? "claude-sonnet-4-20250514" : "claude-haiku-4-5-20251001";
 
+    // Birth chart needs more tokens for detailed interpretation
+    const maxTokens = body.type === "birthchart" ? 2048 : 1024;
+
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -195,7 +221,7 @@ Deno.serve(async (req: Request) => {
       },
       body: JSON.stringify({
         model,
-        max_tokens: 1024,
+        max_tokens: maxTokens,
         system: systemPrompt,
         messages: [{ role: "user", content: userMessage }],
       }),

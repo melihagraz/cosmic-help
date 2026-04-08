@@ -11,8 +11,10 @@ let isInitialized = false;
 
 // RevenueCat'i initialize et
 export async function initializePurchases(): Promise<void> {
+  // RevenueCat sadece iOS/Android'de çalışır
+  if (Platform.OS === 'web') return;
+
   try {
-    // Web'de veya Expo Go'da mock mod çalışır
     const RNPurchases = require('react-native-purchases');
     Purchases = RNPurchases.default || RNPurchases;
 
@@ -22,7 +24,7 @@ export async function initializePurchases(): Promise<void> {
       console.log('RevenueCat initialized');
     }
   } catch (error) {
-    console.log('RevenueCat not available (web/Expo Go mode):', error);
+    console.log('RevenueCat not available (Expo Go mode):', error);
   }
 }
 

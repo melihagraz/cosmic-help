@@ -12,13 +12,14 @@ export interface UserProfile {
 }
 
 export interface ReadingRequest {
-  type: "coffee" | "tarot" | "dream" | "palm" | "face";
+  type: "coffee" | "tarot" | "dream" | "palm" | "face" | "birthchart";
   lang: "tr" | "en";
   userProfile?: UserProfile;
   imageBase64?: string;
   dreamText?: string;
   tarotCards?: string[];
   tarotPositions?: string[];
+  birthChartData?: string; // Formatted chart data for AI interpretation
 }
 
 export interface ReadingResponse {
@@ -75,4 +76,8 @@ export async function getPalmReading(imageBase64: string, lang: "tr" | "en", pro
 
 export async function getFaceReading(imageBase64: string, lang: "tr" | "en", profile?: UserProfile) {
   return getAIReading({ type: "face", lang, imageBase64, userProfile: profile });
+}
+
+export async function getBirthChartReading(birthChartData: string, lang: "tr" | "en", profile?: UserProfile) {
+  return getAIReading({ type: "birthchart", lang, birthChartData, userProfile: profile });
 }

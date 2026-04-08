@@ -28,38 +28,54 @@ export default function BirthDateScreen() {
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
   const years = Array.from({ length: 80 }, (_, i) => 2012 - i); // 2012 -> 1933
 
-  const ScrollPicker = ({ items, selected, onSelect, renderItem }: any) => (
-    <ScrollView
-      style={{ height: 150, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(212,165,116,0.15)', backgroundColor: 'rgba(255,255,255,0.03)' }}
-      showsVerticalScrollIndicator={false}
-    >
-      {items.map((item: any, idx: number) => {
-        const isSelected = item.value === selected;
-        return (
-          <TouchableOpacity
-            key={idx}
-            onPress={() => onSelect(item.value)}
-            style={{
-              paddingVertical: 10,
-              paddingHorizontal: 16,
-              backgroundColor: isSelected ? 'rgba(212,165,116,0.15)' : 'transparent',
-              borderLeftWidth: isSelected ? 3 : 0,
-              borderLeftColor: Colors.gold,
-            }}
-          >
-            <Text style={{
-              fontFamily: isSelected ? 'PlayfairDisplay_700Bold' : 'PlayfairDisplay_400Regular',
-              fontSize: 15,
-              color: isSelected ? Colors.gold : Colors.star,
-              textAlign: 'center',
-            }}>
-              {renderItem ? renderItem(item) : item.label}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </ScrollView>
-  );
+  const ITEM_HEIGHT = 40;
+  const ScrollPicker = ({ items, selected, onSelect, renderItem }: any) => {
+    const scrollRef = useRef<ScrollView>(null);
+    const selectedIndex = items.findIndex((item: any) => item.value === selected);
+
+    useEffect(() => {
+      if (scrollRef.current && selectedIndex >= 0) {
+        setTimeout(() => {
+          scrollRef.current?.scrollTo({ y: Math.max(0, selectedIndex * ITEM_HEIGHT - 55), animated: false });
+        }, 100);
+      }
+    }, [selectedIndex]);
+
+    return (
+      <ScrollView
+        ref={scrollRef}
+        style={{ height: 150, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(212,165,116,0.15)', backgroundColor: 'rgba(255,255,255,0.03)' }}
+        showsVerticalScrollIndicator={false}
+      >
+        {items.map((item: any, idx: number) => {
+          const isSelected = item.value === selected;
+          return (
+            <TouchableOpacity
+              key={idx}
+              onPress={() => onSelect(item.value)}
+              style={{
+                height: ITEM_HEIGHT,
+                justifyContent: 'center',
+                paddingHorizontal: 16,
+                backgroundColor: isSelected ? 'rgba(212,165,116,0.15)' : 'transparent',
+                borderLeftWidth: isSelected ? 3 : 0,
+                borderLeftColor: Colors.gold,
+              }}
+            >
+              <Text style={{
+                fontFamily: isSelected ? 'PlayfairDisplay_700Bold' : 'PlayfairDisplay_400Regular',
+                fontSize: 15,
+                color: isSelected ? Colors.gold : Colors.star,
+                textAlign: 'center',
+              }}>
+                {renderItem ? renderItem(item) : item.label}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    );
+  };
 
   return (
     <Animated.View style={{ flex: 1, padding: 24, paddingTop: 60, opacity: fadeAnim }}>

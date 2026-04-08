@@ -76,7 +76,7 @@ export default function PaywallScreen() {
         <View style={{ alignItems: 'center', marginBottom: 28 }}>
           <Text style={{ fontSize: 48, marginBottom: 8 }}>✦</Text>
           <Text style={{ fontFamily: 'PlayfairDisplay_700Bold', fontSize: 28, color: Colors.star, textAlign: 'center', marginBottom: 4 }}>
-            Kismet Premium
+            Cosmic Help Premium
           </Text>
           <Text style={{ fontFamily: 'PlayfairDisplay_400Regular', fontSize: 15, color: Colors.gold, textAlign: 'center' }}>
             {lang === 'tr' ? 'Geleceğin sınırları kaldır' : 'Unlock the full cosmic experience'}

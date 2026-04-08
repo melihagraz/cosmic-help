@@ -12,17 +12,25 @@ export interface UserProfile {
   birthDay: number;
   birthMonth: number;
   birthYear: number;
+  birthTime?: string; // HH:mm format, optional
   city: string;
   gender: string;
   relation: string;
   focus: string[];
   interests: string[];
   experience: string;
+  matchingOptIn?: boolean;  // User opted in to Cosmic Matching
+  guidanceOptIn?: boolean;  // User opted in to Weekly Guidance
 }
 
 export const storage = {
   // Profile
   async saveProfile(profile: UserProfile): Promise<void> {
+    await AsyncStorage.setItem(KEYS.PROFILE, JSON.stringify(profile));
+  },
+
+  // Save profile without setting onboarding done (for sync updates)
+  async saveProfileOnly(profile: UserProfile): Promise<void> {
     await AsyncStorage.setItem(KEYS.PROFILE, JSON.stringify(profile));
   },
 

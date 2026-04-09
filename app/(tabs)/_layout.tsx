@@ -25,7 +25,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Kismet',
+          title: 'Home',
           tabBarIcon: ({ color }) => <TabIcon icon="✦" color={color} />,
         }}
       />

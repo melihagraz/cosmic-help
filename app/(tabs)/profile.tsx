@@ -104,7 +104,7 @@ export default function ProfileScreen() {
       </View>
 
       <Text style={{ fontFamily: 'PlayfairDisplay_400Regular', fontSize: 11, color: 'rgba(255,255,255,0.15)', marginTop: 32 }}>
-        Kismet v1.0.0 • Powered by Claude AI
+        Cosmic Help v1.0.0 • Powered by Claude AI
       </Text>
     </ScrollView>
   );
